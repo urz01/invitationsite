@@ -8,7 +8,7 @@ define('DB_NAME', 'wedding_rsvp');
 // ─── Wedding Details — Customise these! ───────────────────────────────────────
 define('GROOM_NAME',     'Jobelle');
 define('BRIDE_NAME',     'Uriel');
-define('WEDDING_DATE',   'September 01, 2026');
+define('WEDDING_DATE',   'February 30, 2027');
 define('WEDDING_DATE_ISO', '2026-09-01T16:00:00'); // used by countdown timer
 define('WEDDING_TIME',   '9:00 AM');
 define('CEREMONY',     "Kingdom Hall of Jehovah's Witnesses Roxas");
