@@ -15,7 +15,7 @@ define('CEREMONY',     "Kingdom Hall of Jehovah's Witnesses Roxas");
 define('RECEPTION',     "L.D. Ignacio's Island Hotel and Resort");
 define('VENUE_NAME',    "L.D. Ignacio's Island Hotel and Resort");
 define('VENUE_ADDRESS',  'Sta. Fe, Roxas, Oriental Mindoro');
-define('RSVP_DEADLINE',  'August 15, 2026');
+define('RSVP_DEADLINE',  'January 15, 2027');
 define('HASHTAG',        '#URIEL&JOBELLE');
 
 // ─── Dress Code & Motif ───────────────────────────────────────────────────────
