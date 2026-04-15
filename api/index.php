@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= BRIDE_NAME ?> &amp; <?= GROOM_NAME ?> — Wedding Invitation</title>
 
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="style.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -83,6 +83,7 @@
             <li><a href="#details">Details</a></li>
             <li><a href="#schedule">Schedule</a></li>
             <li><a href="#entourage">Entourage</a></li>
+            <li><a href="#gallery">Gallery</a></li>
             <li><a href="#gift">Gifts</a></li>
             <li><a href="#rsvp" class="nav-rsvp">RSVP</a></li>
         </ul>
@@ -105,11 +106,15 @@
             <li><a href="#schedule"   onclick="closeMobileMenu()">Schedule</a></li>
             <li><a href="#map"        onclick="closeMobileMenu()">Map &amp; Directions</a></li>
             <li><a href="#entourage"  onclick="closeMobileMenu()">Entourage</a></li>
+            <li><a href="#gallery"    onclick="closeMobileMenu()">Gallery</a></li>
             <li><a href="#gift"       onclick="closeMobileMenu()">Gift Note</a></li>
             <li><a href="#rsvp"       onclick="closeMobileMenu()" class="nav-rsvp-mobile">RSVP</a></li>
         </ul>
     </div>
 </nav>
+
+<!-- Petal shower canvas (fixed overlay, pointer-events: none) -->
+<div id="petalCanvas" aria-hidden="true"></div>
 
 
 <!-- ═══════════════════════════════════════════════════════════════════════════
@@ -286,17 +291,17 @@
         <!-- Color swatches -->
         <?php
         $motifColors = [
-            ['hex' => '#C9A84C', 'name' => 'Gold',       'role' => 'Primary Accent'],
-            ['hex' => '#D4A5B0', 'name' => 'Dusty Rose',  'role' => 'Primary Motif'],
-            ['hex' => '#B57D8E', 'name' => 'Mauve',       'role' => 'Deep Accent'],
-            ['hex' => '#F2E8EC', 'name' => 'Blush',       'role' => 'Soft Base'],
-            ['hex' => '#8FA68F', 'name' => 'Sage',        'role' => 'Neutral Accent'],
+            ['hex' => '#3D1020', 'name' => 'Deep Burgundy', 'role' => 'Primary Dark'],
+            ['hex' => '#5C2030', 'name' => 'Dark Rosewood', 'role' => 'Primary Motif'],
+            ['hex' => '#6B8070', 'name' => 'Muted Sage',    'role' => 'Accent'],
+            ['hex' => '#E8B0A8', 'name' => 'Blush Pink',    'role' => 'Secondary Accent'],
+            ['hex' => '#F0D5D0', 'name' => 'Soft Petal',    'role' => 'Soft Base'],
         ];
         ?>
         <div class="color-palette">
             <?php foreach ($motifColors as $c): ?>
             <div class="color-swatch">
-                <div class="swatch-circle" style="background:<?= $c['hex'] ?>; <?= $c['name'] === 'Blush' ? 'border:1px solid #e5d8e0;' : '' ?>"></div>
+                <div class="swatch-circle" style="background:<?= $c['hex'] ?>; <?= $c['name'] === 'Soft Petal' ? 'border:1px solid #dcc8c4;' : '' ?>"></div>
                 <p class="swatch-name"><?= $c['name'] ?></p>
                 <p class="swatch-hex"><?= $c['hex'] ?></p>
                 <p class="swatch-role"><?= $c['role'] ?></p>
@@ -551,6 +556,68 @@
 
 
 <!-- ═══════════════════════════════════════════════════════════════════════════
+     GALLERY
+═══════════════════════════════════════════════════════════════════════════════ -->
+<section id="gallery">
+    <div class="gallery-inner fade-up">
+
+        <div class="section-header">
+            <p class="section-tag">Captured moments</p>
+            <h2 class="section-title">Gallery</h2>
+            <div class="gold-divider section-divider"></div>
+        </div>
+
+        <?php
+        $photos = [
+            ['src' => 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=1200&q=80', 'alt' => 'Wedding floral'],
+            ['src' => 'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=800&q=80',  'alt' => 'Wedding rings'],
+            ['src' => 'https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=800&q=80',  'alt' => 'Bridal bouquet'],
+            ['src' => 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1200&q=80', 'alt' => 'Ceremony aisle'],
+            ['src' => 'https://images.unsplash.com/photo-1529636444744-adffc9135a5e?auto=format&fit=crop&w=800&q=80',  'alt' => 'Wedding couple'],
+            ['src' => 'https://images.unsplash.com/photo-1550005809-91ad75fb315f?auto=format&fit=crop&w=800&q=80',     'alt' => 'Wedding reception'],
+            ['src' => 'https://images.unsplash.com/photo-1460978812857-470ed1c77af0?auto=format&fit=crop&w=1200&q=80', 'alt' => 'Wedding flowers'],
+            ['src' => 'https://images.unsplash.com/photo-1525258801831-c20bc77f0fd4?auto=format&fit=crop&w=800&q=80',  'alt' => 'Wedding dance'],
+            ['src' => 'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?auto=format&fit=crop&w=800&q=80',  'alt' => 'Wedding portrait'],
+        ];
+        ?>
+
+        <div class="gallery-grid">
+            <?php foreach ($photos as $i => $photo): ?>
+            <div class="gallery-item" onclick="openLightbox(<?= $i ?>)">
+                <img src="<?= $photo['src'] ?>" alt="<?= htmlspecialchars($photo['alt']) ?>" loading="lazy">
+                <div class="gallery-item-overlay">
+                    <svg class="gallery-zoom-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/>
+                    </svg>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+
+    </div>
+</section>
+
+<!-- Lightbox -->
+<div id="galleryLightbox" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <button class="lb-close" onclick="closeLightbox()" aria-label="Close">&times;</button>
+    <button class="lb-prev" onclick="lbNav(-1)" aria-label="Previous">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+    </button>
+    <div class="lb-img-wrap">
+        <img id="lbImage" src="" alt="">
+    </div>
+    <button class="lb-next" onclick="lbNav(1)" aria-label="Next">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
+    </button>
+    <p class="lb-counter"><span id="lbCurrent">1</span> / <span id="lbTotal">1</span></p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════════════════
      RSVP FORM
 ═══════════════════════════════════════════════════════════════════════════════ -->
 <section id="rsvp">
@@ -695,14 +762,14 @@
 // ─── Invitation screen ────────────────────────────────────────────────────────
 function enterSite() {
     const screen = document.getElementById('invitationScreen');
-    screen.classList.add('slide-out');
+    screen.classList.add('flip-out');
     document.body.classList.remove('invitation-mode');
 
     setTimeout(() => {
         screen.remove();
         const rsvp = document.getElementById('rsvp');
         if (rsvp) rsvp.scrollIntoView({ behavior: 'smooth' });
-    }, 950);
+    }, 1200);
 }
 
 // ─── Navbar scroll effect ─────────────────────────────────────────────────────
@@ -771,6 +838,49 @@ document.querySelectorAll('input[name="attending"]').forEach(radio => {
     });
 });
 
+// ─── Gallery lightbox ────────────────────────────────────────────────────────
+const lbPhotos = <?php echo json_encode(array_values($photos)); ?>;
+let lbIndex = 0;
+
+function openLightbox(i) {
+    lbIndex = i;
+    lbRender();
+    document.getElementById('galleryLightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+    document.getElementById('galleryLightbox').classList.remove('open');
+    document.body.style.overflow = '';
+}
+function lbNav(dir) {
+    const img = document.getElementById('lbImage');
+    img.classList.add('fading');
+    setTimeout(() => {
+        lbIndex = (lbIndex + dir + lbPhotos.length) % lbPhotos.length;
+        lbRender();
+        img.classList.remove('fading');
+    }, 220);
+}
+function lbRender() {
+    const p = lbPhotos[lbIndex];
+    const img = document.getElementById('lbImage');
+    img.src = p.src;
+    img.alt = p.alt;
+    document.getElementById('lbCurrent').textContent = lbIndex + 1;
+    document.getElementById('lbTotal').textContent   = lbPhotos.length;
+}
+
+document.getElementById('galleryLightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+});
+document.addEventListener('keydown', function(e) {
+    const lb = document.getElementById('galleryLightbox');
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape')     closeLightbox();
+    if (e.key === 'ArrowLeft')  lbNav(-1);
+    if (e.key === 'ArrowRight') lbNav(1);
+});
+
 // ─── RSVP: form submission ────────────────────────────────────────────────────
 document.getElementById('rsvpForm').addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -812,6 +922,65 @@ document.getElementById('rsvpForm').addEventListener('submit', async function (e
         spinner.classList.add('hidden');
     }
 });
+
+// ─── Petal rain ───────────────────────────────────────────────────────────────
+(function () {
+    const canvas = document.getElementById('petalCanvas');
+
+    const COLORS = [
+        'rgba(240,213,208,0.88)',
+        'rgba(232,176,168,0.78)',
+        'rgba(255,248,245,0.72)',
+        'rgba(255,255,255,0.62)',
+        'rgba(107,128,112,0.42)',
+        'rgba(220,190,186,0.72)',
+        'rgba(248,225,220,0.80)',
+    ];
+    // CSS border-radius strings for different petal silhouettes
+    const SHAPES = [
+        '150% 0% 150% 0%',
+        '0% 150% 0% 150%',
+        '60% 40% 60% 40% / 50% 60% 40% 50%',
+        '80% 20% 80% 20% / 40% 70% 30% 60%',
+        '50% 50% 50% 50%',
+    ];
+
+    function rand(min, max) { return min + Math.random() * (max - min); }
+
+    function spawnPetal() {
+        const el  = document.createElement('div');
+        el.className = 'petal';
+
+        const w    = rand(7, 18);
+        const h    = w * rand(0.65, 1.25);
+        const dur  = rand(10, 20);
+        const del  = -rand(0, dur);           // start mid-air on load
+        const sway = (Math.random() > 0.5 ? 1 : -1) * rand(40, 130);
+        const spin = (Math.random() > 0.5 ? 1 : -1) * rand(360, 800);
+        const left = rand(-3, 103);
+
+        el.style.cssText = [
+            `width:${w.toFixed(1)}px`,
+            `height:${h.toFixed(1)}px`,
+            `left:${left.toFixed(1)}%`,
+            `background:${COLORS[Math.floor(Math.random() * COLORS.length)]}`,
+            `border-radius:${SHAPES[Math.floor(Math.random() * SHAPES.length)]}`,
+            `animation-duration:${dur.toFixed(2)}s`,
+            `animation-delay:${del.toFixed(2)}s`,
+            `--petal-sway:${sway.toFixed(1)}px`,
+            `--petal-spin:${spin.toFixed(0)}deg`,
+        ].join(';');
+
+        // Randomise horizontal start on each loop so petals don't repeat paths
+        el.addEventListener('animationiteration', () => {
+            el.style.left = rand(-3, 103).toFixed(1) + '%';
+        });
+
+        canvas.appendChild(el);
+    }
+
+    for (let i = 0; i < 24; i++) spawnPetal();
+})();
 </script>
 
 </body>
